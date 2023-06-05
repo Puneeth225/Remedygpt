@@ -1,0 +1,54 @@
+resource "aws_security_group" "cassandra_client" {
+  name        = "intern bastion host"
+  description = "Security group for Cassandra client"
+  security_group_id = sec-group-id
+  vpc_id      = vpc-id
+  
+  ingress {
+    from_port   <= 9042
+    to_port     >= 9042
+    protocol    = "tcp"
+    cidr_blocks = ["your_ip_address/32"]
+  }
+  ingress {
+    protocol    = "-1"
+    cidr_blocks = ["your_ip_address/32"]
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+data "aws_security_group" "cassandra_client" {
+  arn = "arn:aws:ec2:us-west-2:945236499471:security-group/sg-07a3d4c0301dbb0b0"
+}
+
+data "aws_vpc" "vpc_id" {
+  arn = "arn:aws:ec2:us-west-2:945236499471:vpc/vpc-0625db90a468a0eaa"
+}
+
+resource "aws_security_group" "cassandra_client" {
+  name        = "intern bastion host"
+  description = "Security group for Cassandra client"
+  security_group_id = data.aws_security_group.cassandra_client.id
+  vpc_id      = data.aws_vpc.vpc_id.id
+
+  ingress {
+    from_port   = 6000
+    to_port     = 9099
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/32"]
+  }
+  ingress {
+    protocol    = "-1"
+    cidr_blocks = ["10.0.0.0/32"]
+  }
+}
